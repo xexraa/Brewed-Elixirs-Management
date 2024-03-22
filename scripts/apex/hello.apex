@@ -1,0 +1,1 @@
+System.debug([SELECT Id, Name, Mark__c, Subtype__c, Taste__c, Type__c, Weight__c FROM Product2 WHERE IsActive = true AND Type__c = 'Coffee' AND Type__c = 'Tea']);

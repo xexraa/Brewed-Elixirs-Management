@@ -1,0 +1,91 @@
+<template>
+  <lightning-card icon-name="standard:crypto_product_category_wallet_role">
+    <h1 slot="title">{label.CARD_TITLE_ProductDetails}</h1>
+    <lightning-button
+      lwc:if={productId}
+      label={label.BUTTON_EditProduct}
+      slot="actions"
+      class="slds-var-p-right_medium"
+    ></lightning-button>
+    <lightning-button
+      label={label.BUTTON_NewProduct}
+      slot="actions"
+      onclick={openNewProductModal}
+    ></lightning-button>
+    <lightning-layout multiple-rows>
+      <template lwc:if={isLoading}>
+        <lightning-layout-item size="12" class="slds-align_absolute-center">
+          <c-spinner size="medium"></c-spinner>
+        </lightning-layout-item>
+      </template>
+      <template lwc:else>
+        <template lwc:if={productId}>
+          <lightning-layout-item size="12">
+            <lightning-layout multiple-rows>
+              <lightning-layout-item
+                size="3"
+                class="slds-var-p-horizontal_medium"
+              >
+                <lightning-input
+                  type="text"
+                  label="Product Name"
+                  value="Coffee"
+                ></lightning-input>
+                <lightning-input
+                  type="text"
+                  label="Brand"
+                  value="Mark__c"
+                ></lightning-input>
+                <lightning-input
+                  type="text"
+                  label="Subtype"
+                  value="Subtype__c"
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <lightning-layout-item
+                size="3"
+                class="slds-var-p-horizontal_medium"
+              >
+                <lightning-input
+                  type="text"
+                  label="Taste__c"
+                  value="Taste__c"
+                ></lightning-input>
+                <lightning-input
+                  type="text"
+                  label="Type__c"
+                  value="Type__c"
+                ></lightning-input>
+                <lightning-input
+                  type="text"
+                  label="Weight__c"
+                  value="Weight__c"
+                  readonly="true"
+                ></lightning-input>
+              </lightning-layout-item>
+            </lightning-layout>
+
+            <lightning-layout>
+              <lightning-layout-item
+                size="6"
+                class="slds-var-p-horizontal_medium"
+              >
+                <lightning-textarea
+                  label="Description"
+                  value="Description"
+                  maxlength="4000"
+                  readonly="true"
+                ></lightning-textarea>
+              </lightning-layout-item>
+            </lightning-layout>
+          </lightning-layout-item>
+        </template>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+  <c-add-new-product-modal
+    if:true={isAddNewProductModalVisible}
+    onclosemodal={closeNewProductModal}
+  ></c-add-new-product-modal>
+</template>

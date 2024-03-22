@@ -1,0 +1,99 @@
+<!-- sldsValidatorIgnore -->
+<template>
+  <lightning-card icon-name="standard:opportunity">
+    <h1 slot="title">{label.CARD_TITLE_BEproducts}</h1>
+    <lightning-layout multiple-rows>
+      <template lwc:if={isLoading}>
+        <lightning-layout-item size="12" class="slds-align_absolute-center">
+          <c-spinner size="medium"></c-spinner>
+        </lightning-layout-item>
+      </template>
+      <template lwc:else>
+        <!-- Search bar -->
+        <lightning-layout-item size="4">
+          <lightning-input
+            type="search"
+            placeholder={label.PLACEHOLDER_Search}
+            value={keyword}
+            onchange={handleKeyWordChange}
+            class="slds-var-p-left_large slds-var-p-bottom_small"
+          ></lightning-input>
+        </lightning-layout-item>
+
+        <!-- Datatable -->
+        <lightning-layout-item size="12">
+          <lightning-datatable
+            key-field="id"
+            data={recordsToDisplay}
+            columns={columns}
+            column-widths-mode="auto"
+            default-sort-direction={defaultSortDirection}
+            sorted-direction={sortDirection}
+            sorted-by={sortedBy}
+            onsort={onHandleSort}
+            hide-checkbox-column
+            onrowaction={handleRowAction}
+          >
+          </lightning-datatable>
+        </lightning-layout-item>
+
+        <lightning-layout-item size="12">
+          <div
+            class="slds-grid slds-grid_vertical-align-center slds-grid_align-spread"
+            style="padding-top: 0.5em"
+          >
+            <!--Pagination-->
+            <div class="slds-align_absolute-center" style="height: 5rem">
+              <lightning-button
+                disabled={buttonDisableFirst}
+                icon-name="utility:jump_to_left"
+                label={label.BUTTON_First}
+                class="slds-p-horizontal_x-small"
+                alternative-text="First page"
+                onclick={firstPage}
+              ></lightning-button>
+              <lightning-button
+                disabled={buttonDisableFirst}
+                icon-name="utility:chevronleft"
+                label={label.BUTTON_Previous}
+                alternative-text="Previous"
+                onclick={previousPage}
+              ></lightning-button>
+              &nbsp;
+              <span class="slds-badge slds-var-m-horizontal_xx-small">
+                {label.LABEL_Page}&nbsp;{pageNumber}&nbsp;{label.SHORTCUT_Of}&nbsp;{totalPages}
+              </span>
+              &nbsp;
+              <lightning-button
+                disabled={buttonDisableLast}
+                icon-name="utility:chevronright"
+                label={label.BUTTON_Next}
+                alternative-text="Next"
+                onclick={nextPage}
+                icon-position="right"
+              ></lightning-button>
+              <lightning-button
+                disabled={buttonDisableLast}
+                icon-name="utility:jump_to_right"
+                label={label.BUTTON_Last}
+                alternative-text="Last page"
+                onclick={lastPage}
+                class="slds-p-horizontal_x-small"
+                icon-position="right"
+              ></lightning-button>
+            </div>
+
+            <!--Total records-->
+            <div class="slds-clearfix">
+              <div class="slds-float_right slds-var-p-right_medium">
+                <span class="slds-badge">
+                  {label.LABEL_TotalRecords}:&nbsp;{totalRecords}
+                </span>
+              </div>
+            </div>
+          </div>
+        </lightning-layout-item>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+</template>
