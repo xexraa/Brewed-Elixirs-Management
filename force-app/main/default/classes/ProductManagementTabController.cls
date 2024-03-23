@@ -19,18 +19,27 @@ public with sharing class ProductManagementTabController {
     }
 
     @AuraEnabled
-    public static Product2 upsertProduct(Product2 productData) {
+    public static Product2 insertProductWithDefaultImage(Product2 productData) {
         try {
-            return Product2Service.upsertProduct(productData);
+            return Product2Service.insertProductWithDefaultImage(productData);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
 
     @AuraEnabled
-    public static void assignImagesToProduct(Id documentId, Id contentVersionId, Id productId) {
+    public static Product2 updateProduct(Product2 productData) {
         try {
-            FileService.assignImagesToProduct(documentId, contentVersionId, productId);
+            return Product2Service.updateProduct(productData);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void changeProductMainImage(Id oldImageId, Id newImageId) {
+        try {
+            FileService.changeProductMainImage(oldImageId, newImageId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

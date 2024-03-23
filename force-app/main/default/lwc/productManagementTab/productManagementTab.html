@@ -134,17 +134,58 @@
                 padding="around-small"
                 class="slds-align_absolute-center"
               >
-                <lightning-file-upload
-                  label={label.LABEL_UploadProductImage}
-                  name="fileUploader"
-                  accept={acceptedFormats}
-                  record-id={productId}
-                  onuploadfinished={handleUploadFinished}
-                  multiple
-                  class="file-selector-large"
-                  disabled={isProductId}
-                >
-                </lightning-file-upload>
+                <lightning-layout multiple-rows>
+                  <lightning-layout-item
+                    size="12"
+                    class="slds-align_absolute-center"
+                  >
+                    <lightning-file-upload
+                      label={label.LABEL_UploadProductImage}
+                      name="fileUploader"
+                      accept={acceptedFormats}
+                      record-id={productId}
+                      onuploadfinished={handleUploadFinished}
+                      multiple
+                      class="file-selector-large"
+                      disabled={isProductId}
+                    >
+                    </lightning-file-upload>
+                  </lightning-layout-item>
+                  <lightning-layout-item
+                    size="12"
+                    class="slds-align_absolute-center slds-var-m-top_x-small"
+                    if:false={isProductId}
+                  >
+                    <p class="slds-text-color_weak" style="font-size: 10px">
+                      {label.LABEL_Helper}:&nbsp;{label.LABEL_INFO_AboutImageFormats}:&nbsp;{acceptedFormatsString}
+                    </p>
+                  </lightning-layout-item>
+                </lightning-layout>
+              </lightning-layout-item>
+
+              <!-- Footer -->
+              <lightning-layout-item
+                size="12"
+                class="slds-border_top slds-align_absolute-center"
+              >
+                <lightning-layout class="slds-var-p-top_small">
+                  <lightning-layout-item class="slds-var-p-right_medium">
+                    <lightning-button
+                      label={label.BUTTON_Clear}
+                      onclick={handleClear}
+                    >
+                    </lightning-button>
+                  </lightning-layout-item>
+
+                  <lightning-layout-item>
+                    <lightning-button
+                      label={label.BUTTON_Save}
+                      onclick={handleSave}
+                      variant="brand"
+                    >
+                    </lightning-button>
+                  </lightning-layout-item>
+                </lightning-layout>
               </lightning-layout-item>
             </lightning-layout>
           </lightning-layout-item>
@@ -164,49 +205,125 @@
                   </lightning-layout-item>
                 </template>
                 <template lwc:else>
-                  <lightning-layout-item
-                    size="12"
-                    class="slds-var-p-top_medium slds-align_absolute-center"
-                  >
+                  <lightning-layout-item size="12" padding="around-small">
                     <lightning-layout multiple-rows>
-                      <template for:each={productImages} for:item="imageUrl">
-                        <lightning-layout-item
-                          key={imageUrl}
-                          size="3"
-                          class="slds-align_absolute-center"
-                        >
-                          <img src={imageUrl} alt="product image" />
-                        </lightning-layout-item>
+                      <lightning-layout-item
+                        size="12"
+                        class="slds-var-p-bottom_xx-small"
+                      >
+                        <p class="slds-text-color_weak" style="font-size: 10px">
+                          {label.LABEL_Helper}:&nbsp;{label.LABEL_INFO_AboutMainImage}
+                        </p>
+                      </lightning-layout-item>
+                      <template
+                        for:each={productImages}
+                        for:item="productImage"
+                      >
+                        <template lwc:if={productImage.IsMainImage__c}>
+                          <lightning-layout-item
+                            key={productImage.Id}
+                            size="12"
+                            class="slds-box slds-var-m-bottom_x-small card-container"
+                          >
+                            <lightning-layout
+                              class="slds-var-p-vertical_xx-small"
+                            >
+                              <lightning-layout-item
+                                size="1"
+                                class="slds-var-p-right_medium slds-align_absolute-center"
+                              >
+                                <lightning-input
+                                  type="radio"
+                                  name="mainImage"
+                                  value={productImage.Id}
+                                  checked={productImage.IsMainImage__c}
+                                  onchange={handleMainImageChange}
+                                ></lightning-input>
+                              </lightning-layout-item>
+
+                              <lightning-layout-item
+                                size="2"
+                                class="slds-var-p-right_medium image-container slds-align_absolute-center"
+                              >
+                                <img
+                                  src={productImage.VersionDataUrl}
+                                  alt="product image"
+                                />
+                              </lightning-layout-item>
+                              <lightning-layout-item
+                                size="8"
+                                class="slds-align_absolute-center"
+                              >
+                                <p class="slds-text-heading_small">
+                                  {productImage.Title}.{productImage.FileExtension}
+                                </p>
+                              </lightning-layout-item>
+
+                              <lightning-layout-item
+                                size="1"
+                                class="slds-align_absolute-center"
+                              >
+                                <lightning-icon
+                                  icon-name="utility:check"
+                                  alternative-text="check"
+                                  title={label.LABEL_Main}
+                                  class="check-icon"
+                                  size="xx-small"
+                                ></lightning-icon>
+                              </lightning-layout-item>
+                            </lightning-layout>
+                          </lightning-layout-item>
+                        </template>
+                        <template lwc:else>
+                          <lightning-layout-item
+                            key={productImage.Id}
+                            size="12"
+                            class="slds-box slds-var-m-bottom_x-small"
+                          >
+                            <lightning-layout
+                              class="slds-var-p-vertical_xx-small"
+                            >
+                              <lightning-layout-item
+                                size="1"
+                                class="slds-var-p-right_medium slds-align_absolute-center"
+                              >
+                                <lightning-input
+                                  type="radio"
+                                  name="mainImage"
+                                  value={productImage.Id}
+                                  checked={productImage.IsMainImage__c}
+                                  onchange={handleMainImageChange}
+                                ></lightning-input>
+                              </lightning-layout-item>
+
+                              <lightning-layout-item
+                                size="2"
+                                class="slds-var-p-right_medium image-container slds-align_absolute-center"
+                              >
+                                <img
+                                  src={productImage.VersionDataUrl}
+                                  alt="product image"
+                                />
+                              </lightning-layout-item>
+                              <lightning-layout-item
+                                size="9"
+                                class="slds-align_absolute-center"
+                              >
+                                <p class="slds-text-heading_small">
+                                  {productImage.Title}.{productImage.FileExtension}
+                                </p>
+                              </lightning-layout-item>
+                              <lightning-layout-item
+                                size="1"
+                              ></lightning-layout-item>
+                            </lightning-layout>
+                          </lightning-layout-item>
+                        </template>
                       </template>
                     </lightning-layout>
                   </lightning-layout-item>
                 </template>
               </template>
-            </lightning-layout>
-          </lightning-layout-item>
-
-          <!-- Footer -->
-          <lightning-layout-item
-            size="12"
-            class="slds-border_top slds-align_absolute-center"
-          >
-            <lightning-layout class="slds-var-p-top_small">
-              <lightning-layout-item class="slds-var-p-right_medium">
-                <lightning-button
-                  label={label.BUTTON_Clear}
-                  onclick={handleClear}
-                >
-                </lightning-button>
-              </lightning-layout-item>
-
-              <lightning-layout-item>
-                <lightning-button
-                  label={label.BUTTON_Save}
-                  onclick={handleSave}
-                  variant="brand"
-                >
-                </lightning-button>
-              </lightning-layout-item>
             </lightning-layout>
           </lightning-layout-item>
         </template>

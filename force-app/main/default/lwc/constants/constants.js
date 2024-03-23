@@ -26,7 +26,7 @@ const DISCOUNTS = [
   { label: "30%", value: 0.3 }
 ];
 
-const IMAGES_FORMATS_ALLOWED = [".jpg", "jpeg", ".png"];
+const IMAGES_FORMATS_ALLOWED = [".jpg", ".jpeg", ".png"];
 
 const POSTAL_CODE_MAX_LENGTH = 6;
 const PHONE_NUMBER_MAX_LENGTH = 9;

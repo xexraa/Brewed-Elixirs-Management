@@ -1,3 +1,27 @@
 :host {
   --sds-c-textarea-sizing-min-height: 100px;
 }
+
+.slds-box {
+  padding: 0;
+}
+
+.card-container {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.image-container {
+  width: 84px;
+  height: 70px;
+}
+
+.image-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.check-icon {
+  --slds-c-icon-color-foreground-default: rgb(100, 255, 100);
+}

@@ -2,6 +2,7 @@ import TOAST_Error from "@salesforce/label/c.TOAST_Error";
 import TOAST_Success_ProductAdded from "@salesforce/label/c.TOAST_Success_ProductAdded";
 import TOAST_Success_ProductEdited from "@salesforce/label/c.TOAST_Success_ProductEdited";
 import TOAST_Success_ProductSaved from "@salesforce/label/c.TOAST_Success_ProductSaved";
+import TOAST_Success_MainImageChanged from "@salesforce/label/c.TOAST_Success_MainImageChanged";
 
 import CARD_TITLE_BEproducts from "@salesforce/label/c.CARD_TITLE_BEproducts";
 import CARD_TITLE_ProductDetails from "@salesforce/label/c.CARD_TITLE_ProductDetails";
@@ -16,9 +17,13 @@ import LABEL_TotalRecords from "@salesforce/label/c.LABEL_TotalRecords";
 import LABEL_Page from "@salesforce/label/c.LABEL_Page";
 import LABEL_Description from "@salesforce/label/c.LABEL_Description";
 import LABEL_UploadProductImage from "@salesforce/label/c.LABEL_UploadProductImage";
+import LABEL_Helper from "@salesforce/label/c.LABEL_Helper";
+import LABEL_Main from "@salesforce/label/c.LABEL_Main";
 
 import LABEL_ASK_IsActive from "@salesforce/label/c.LABEL_ASK_IsActive";
 import LABEL_INFO_ProductNoImg from "@salesforce/label/c.LABEL_INFO_ProductNoImg";
+import LABEL_INFO_AboutMainImage from "@salesforce/label/c.LABEL_INFO_AboutMainImage";
+import LABEL_INFO_AboutImageFormats from "@salesforce/label/c.LABEL_INFO_AboutImageFormats";
 
 import SHORTCUT_Of from "@salesforce/label/c.SHORTCUT_Of";
 
@@ -46,6 +51,7 @@ export {
   TOAST_Success_ProductAdded,
   TOAST_Success_ProductEdited,
   TOAST_Success_ProductSaved,
+  TOAST_Success_MainImageChanged,
   CARD_TITLE_BEproducts,
   CARD_TITLE_ProductDetails,
   LABEL_Name,
@@ -58,8 +64,12 @@ export {
   LABEL_Page,
   LABEL_Description,
   LABEL_UploadProductImage,
+  LABEL_Helper,
+  LABEL_Main,
   LABEL_ASK_IsActive,
   LABEL_INFO_ProductNoImg,
+  LABEL_INFO_AboutMainImage,
+  LABEL_INFO_AboutImageFormats,
   SHORTCUT_Of,
   PLACEHOLDER_Search,
   PLACEHOLDER_Coffee,

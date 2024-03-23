@@ -1,5 +1,7 @@
 public with sharing class FileService {
 
+    private final static String DEFAULT_IMAGE_NAME = Constants.DEFAULT_IMAGE_NAME;
+
     public static void assignImagesToProduct(Id documentId, Id contentVersionId, Id productId) {
         ContentDocumentLink link = new ContentDocumentLink(
             ContentDocumentId = documentId,
@@ -20,27 +22,47 @@ public with sharing class FileService {
         system.debug('cd ' + cd);
     }
 
+    public static void assignDefaultImageToProduct(Id productId) {
+        StaticResource sr = [SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = :DEFAULT_IMAGE_NAME LIMIT 1];
+
+        ContentVersion cv = new ContentVersion();
+        cv.Title = sr.Name;
+        cv.PathOnClient = sr.Name + '.' + getFileExtension(sr.ContentType);
+        cv.VersionData = sr.Body;
+        cv.FirstPublishLocationId = productId;
+        cv.IsMainImage__c = true;
+        
+        insert cv;
+
+        system.debug('cv ' + cv);
+    }
+
     public static List<ContentVersion> getProductImages(Id productId) {
-        // List<ContentVersion> imageUrls = new List<ContentVersion>();
+        Set<Id> contentDocumentIds = new Set<Id>();
 
         List<ContentDocumentLink> documentLinks = [SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :productId];
 
         if (!documentLinks.isEmpty()) {
-            Set<Id> contentDocumentIds = new Set<Id>();
             for (ContentDocumentLink link : documentLinks) {
                 contentDocumentIds.add(link.ContentDocumentId);
             }
-
-            List<ContentVersion> contentVersions = [SELECT VersionDataUrl, IsMainImage__c FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIds];
-
-            // for (ContentVersion cv : contentVersions) {
-            //     imageUrls.add(cv.VersionDataUrl);
-            // }
-            return contentVersions;
-        } else {
-            return null;
         }
 
+        return [SELECT VersionDataUrl, IsMainImage__c, Title, FileExtension FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIds];
+    }
+
+    public static void changeProductMainImage(Id oldImageId, Id newImageId) {
+        if (oldImageId != null) {
+            update new ContentVersion(
+                Id = oldImageId,
+                IsMainImage__c = false
+            );
+        }
+
+        update new ContentVersion(
+            Id = newImageId,
+            IsMainImage__c = true
+        );
     }
 
     public static List<String> getImagesForProduct(Id productId) {
@@ -53,6 +75,10 @@ public with sharing class FileService {
         }
         
         return imageUrls;
+    }
+
+    private static String getFileExtension(String contentType) {
+        return contentType.substringAfter('image/');
     }
 
     // public static void assignImageToProduct(String imageTitle, Id productId) {

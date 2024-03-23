@@ -17,8 +17,10 @@ public with sharing class Product2Service {
         return [SELECT Id, Name, Mark__c, Subtype__c, Taste__c, Type__c, Weight__c, IsActive, Description FROM Product2 WHERE Id = :productId];
     }
 
-    public static Product2 upsertProduct(Product2 productData) {
-        upsert productData;
+    public static Product2 insertProductWithDefaultImage(Product2 productData) {
+        insert productData;
+system.debug('after ' + productData);
+        FileService.assignDefaultImageToProduct(productData.Id);
         
         return productData;
     }
