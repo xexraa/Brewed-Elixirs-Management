@@ -2,15 +2,10 @@
   <lightning-card icon-name="standard:crypto_product_category_wallet_role">
     <h1 slot="title">{label.CARD_TITLE_ProductDetails}</h1>
     <lightning-button
-      lwc:if={productId}
-      label={label.BUTTON_EditProduct}
-      slot="actions"
-      class="slds-var-p-right_medium"
-    ></lightning-button>
-    <lightning-button
       label={label.BUTTON_NewProduct}
       slot="actions"
-      onclick={openNewProductModal}
+      onclick={openNewProductSection}
+      disabled={isProductSectionActive}
     ></lightning-button>
     <lightning-layout multiple-rows>
       <template lwc:if={isLoading}>
@@ -19,64 +14,198 @@
         </lightning-layout-item>
       </template>
       <template lwc:else>
-        <template lwc:if={productId}>
-          <lightning-layout-item size="12">
+        <template lwc:if={isProductSectionVisible}>
+          <!-- Left section -->
+          <lightning-layout-item size="6">
             <lightning-layout multiple-rows>
-              <lightning-layout-item
-                size="3"
-                class="slds-var-p-horizontal_medium"
-              >
+              <!-- Name -->
+              <lightning-layout-item size="6" padding="around-small">
                 <lightning-input
                   type="text"
-                  label="Product Name"
-                  value="Coffee"
-                ></lightning-input>
-                <lightning-input
-                  type="text"
-                  label="Brand"
-                  value="Mark__c"
-                ></lightning-input>
-                <lightning-input
-                  type="text"
-                  label="Subtype"
-                  value="Subtype__c"
+                  data-name="name"
+                  label={label.LABEL_Name}
+                  value={name}
+                  class="validate"
+                  onchange={handleChange}
+                  required
                 ></lightning-input>
               </lightning-layout-item>
 
-              <lightning-layout-item
-                size="3"
-                class="slds-var-p-horizontal_medium"
-              >
+              <!-- Brand -->
+              <lightning-layout-item size="6" padding="around-small">
                 <lightning-input
                   type="text"
-                  label="Taste__c"
-                  value="Taste__c"
-                ></lightning-input>
-                <lightning-input
-                  type="text"
-                  label="Type__c"
-                  value="Type__c"
-                ></lightning-input>
-                <lightning-input
-                  type="text"
-                  label="Weight__c"
-                  value="Weight__c"
-                  readonly="true"
+                  data-name="mark"
+                  label={label.LABEL_Brand}
+                  value={mark}
+                  class="validate"
+                  onchange={handleChange}
+                  required
                 ></lightning-input>
               </lightning-layout-item>
-            </lightning-layout>
 
-            <lightning-layout>
+              <!-- Type -->
+              <lightning-layout-item size="6" padding="around-small">
+                <lightning-input
+                  type="text"
+                  data-name="type"
+                  label={label.LABEL_Type}
+                  value={type}
+                  class="validate"
+                  onchange={handleChange}
+                  required
+                  placeholder={label.PLACEHOLDER_Coffee}
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <!-- Subtype -->
+              <lightning-layout-item size="6" padding="around-small">
+                <lightning-input
+                  type="text"
+                  data-name="subtype"
+                  label={label.LABEL_Subtype}
+                  value={subtype}
+                  class="validate"
+                  onchange={handleChange}
+                  required
+                  placeholder={label.PLACEHOLDER_Beans}
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <!-- Taste -->
+              <lightning-layout-item size="6" padding="around-small">
+                <lightning-input
+                  type="text"
+                  data-name="taste"
+                  label={label.LABEL_Taste}
+                  value={taste}
+                  class="validate"
+                  onchange={handleChange}
+                  required
+                  placeholder={label.PLACEHOLDER_Tasteless}
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <!-- Weight -->
+              <lightning-layout-item size="6" padding="around-small">
+                <lightning-input
+                  type="text"
+                  data-name="weight"
+                  label={label.LABEL_Weight}
+                  value={weight}
+                  class="validate"
+                  onchange={handleChange}
+                  required
+                  placeholder={label.PLACEHOLDER_908g}
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <!-- Description -->
+              <lightning-layout-item size="12" padding="around-small">
+                <lightning-textarea
+                  data-name="description"
+                  label={label.LABEL_Description}
+                  value={description}
+                  maxlength="4000"
+                  class="slds-var-p-horizontal_xx-large validate"
+                  onchange={handleChange}
+                  required
+                ></lightning-textarea>
+              </lightning-layout-item>
+
+              <!-- Is active -->
               <lightning-layout-item
                 size="6"
-                class="slds-var-p-horizontal_medium"
+                padding="around-small"
+                class="slds-align_absolute-center"
               >
-                <lightning-textarea
-                  label="Description"
-                  value="Description"
-                  maxlength="4000"
-                  readonly="true"
-                ></lightning-textarea>
+                <lightning-input
+                  type="checkbox"
+                  data-name="isActive"
+                  label={label.LABEL_ASK_IsActive}
+                  checked={isActive}
+                  onchange={handleChange}
+                ></lightning-input>
+              </lightning-layout-item>
+
+              <!-- File uploader -->
+              <lightning-layout-item
+                size="6"
+                padding="around-small"
+                class="slds-align_absolute-center"
+              >
+                <lightning-file-upload
+                  label={label.LABEL_UploadProductImage}
+                  name="fileUploader"
+                  accept={acceptedFormats}
+                  record-id={productId}
+                  onuploadfinished={handleUploadFinished}
+                  multiple
+                  class="file-selector-large"
+                  disabled={isProductId}
+                >
+                </lightning-file-upload>
+              </lightning-layout-item>
+            </lightning-layout>
+          </lightning-layout-item>
+
+          <!-- Right section -->
+          <lightning-layout-item size="6">
+            <lightning-layout multiple-rows>
+              <template lwc:if={productId}>
+                <template lwc:if={isProductImagesEmpty}>
+                  <lightning-layout-item
+                    size="12"
+                    class="slds-var-p-top_medium slds-align_absolute-center"
+                  >
+                    <p class="slds-text-heading_medium">
+                      {label.LABEL_INFO_ProductNoImg}
+                    </p>
+                  </lightning-layout-item>
+                </template>
+                <template lwc:else>
+                  <lightning-layout-item
+                    size="12"
+                    class="slds-var-p-top_medium slds-align_absolute-center"
+                  >
+                    <lightning-layout multiple-rows>
+                      <template for:each={productImages} for:item="imageUrl">
+                        <lightning-layout-item
+                          key={imageUrl}
+                          size="3"
+                          class="slds-align_absolute-center"
+                        >
+                          <img src={imageUrl} alt="product image" />
+                        </lightning-layout-item>
+                      </template>
+                    </lightning-layout>
+                  </lightning-layout-item>
+                </template>
+              </template>
+            </lightning-layout>
+          </lightning-layout-item>
+
+          <!-- Footer -->
+          <lightning-layout-item
+            size="12"
+            class="slds-border_top slds-align_absolute-center"
+          >
+            <lightning-layout class="slds-var-p-top_small">
+              <lightning-layout-item class="slds-var-p-right_medium">
+                <lightning-button
+                  label={label.BUTTON_Clear}
+                  onclick={handleClear}
+                >
+                </lightning-button>
+              </lightning-layout-item>
+
+              <lightning-layout-item>
+                <lightning-button
+                  label={label.BUTTON_Save}
+                  onclick={handleSave}
+                  variant="brand"
+                >
+                </lightning-button>
               </lightning-layout-item>
             </lightning-layout>
           </lightning-layout-item>
@@ -84,8 +213,4 @@
       </template>
     </lightning-layout>
   </lightning-card>
-  <c-add-new-product-modal
-    if:true={isAddNewProductModalVisible}
-    onclosemodal={closeNewProductModal}
-  ></c-add-new-product-modal>
 </template>

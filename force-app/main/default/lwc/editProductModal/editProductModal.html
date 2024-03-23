@@ -45,6 +45,7 @@
                     id="name"
                     data-name="name"
                     class="slds-input validate"
+                    value={name}
                     onchange={handleChange}
                     required
                   />
@@ -64,6 +65,7 @@
                     id="mark"
                     data-name="mark"
                     class="slds-input validate"
+                    value={mark}
                     onchange={handleChange}
                     required
                   />
@@ -87,6 +89,7 @@
                     id="type"
                     data-name="type"
                     class="slds-input validate"
+                    value={type}
                     onchange={handleChange}
                     required
                     placeholder={label.PLACEHOLDER_Coffee}
@@ -107,6 +110,7 @@
                     id="subtype"
                     data-name="subtype"
                     class="slds-input validate"
+                    value={subtype}
                     onchange={handleChange}
                     required
                     placeholder={label.PLACEHOLDER_Beans}
@@ -131,6 +135,7 @@
                     id="taste"
                     data-name="taste"
                     class="slds-input validate"
+                    value={taste}
                     onchange={handleChange}
                     required
                     placeholder={label.PLACEHOLDER_Tasteless}
@@ -151,6 +156,7 @@
                     id="weight"
                     data-name="weight"
                     class="slds-input validate"
+                    value={weight}
                     onchange={handleChange}
                     required
                     placeholder={label.PLACEHOLDER_908g}
@@ -179,7 +185,10 @@
                     onchange={handleChange}
                     rows="5"
                     required
-                  ></textarea>
+                  >
+                    {description}
+                </textarea
+                  >
                 </lightning-layout-item>
               </lightning-layout>
 
@@ -190,6 +199,7 @@
                     type="checkbox"
                     label={label.LABEL_ASK_IsActive}
                     data-name="isActive"
+                    checked={isActive}
                     onchange={handleChange}
                   ></lightning-input>
                 </lightning-layout-item>

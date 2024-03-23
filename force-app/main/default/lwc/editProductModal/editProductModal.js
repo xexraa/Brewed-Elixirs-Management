@@ -1,16 +1,17 @@
-import { LightningElement } from "lwc";
+import { LightningElement, api } from "lwc";
 
-import insertNewProduct from "@salesforce/apex/AddNewProductModalController.insertNewProduct";
+import updateProduct from "@salesforce/apex/EditProductModalController.updateProduct";
 
 import ToastUtility from "c/utility";
 import * as LABELS from "c/labelsManagement";
 
-export default class AddNewProductModal extends LightningElement {
+export default class EditProductModal extends LightningElement {
   label = LABELS;
 
   isLoading = false;
 
-  isActive = false;
+  productId;
+  isActive;
   name;
   mark;
   type;
@@ -19,11 +20,34 @@ export default class AddNewProductModal extends LightningElement {
   weight;
   description;
 
+  @api product;
+
+  connectedCallback() {
+    this.populateInitialValues(this.product);
+  }
+
+  populateInitialValues(product) {
+    this.productId = product.Id;
+    this.name = this.getFieldValue(product.Name);
+    this.mark = this.getFieldValue(product.Mark__c);
+    this.type = this.getFieldValue(product.Type__c);
+    this.subtype = this.getFieldValue(product.Subtype__c);
+    this.taste = this.getFieldValue(product.Taste__c);
+    this.weight = this.getFieldValue(product.Weight__c);
+    this.description = this.getFieldValue(product.Description);
+    this.isActive = product.IsActive;
+  }
+
+  getFieldValue(field) {
+    return typeof field === "undefined" ? "" : field;
+  }
+
   handleSave() {
     this.isLoading = true;
 
     if (this.isInputValid()) {
       let productData = { sobjectType: "Product2" };
+      productData.Id = this.productId;
       productData.IsActive = this.isActive;
       productData.Name = this.name;
       productData.Mark__c = this.mark;
@@ -33,14 +57,14 @@ export default class AddNewProductModal extends LightningElement {
       productData.Weight__c = this.weight;
       productData.Description = this.description;
 
-      insertNewProduct({ productData: productData })
+      updateProduct({ productData: productData })
         .then((result) => {
           ToastUtility.displayToast(
-            this.label.TOAST_Success_ProductAdded,
+            this.label.TOAST_Success_ProductEdited,
             "success"
           );
           this.dispatchEvent(
-            new CustomEvent("successinsert", { detail: result })
+            new CustomEvent("successedit", { detail: result })
           );
           this.closeModal();
         })

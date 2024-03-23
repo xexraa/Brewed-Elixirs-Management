@@ -26,6 +26,8 @@ const DISCOUNTS = [
   { label: "30%", value: 0.3 }
 ];
 
+const IMAGES_FORMATS_ALLOWED = [".jpg", "jpeg", ".png"];
+
 const POSTAL_CODE_MAX_LENGTH = 6;
 const PHONE_NUMBER_MAX_LENGTH = 9;
 const ORDER_IN_PACKING_STATUS = "In Packing";
@@ -44,5 +46,6 @@ export {
   ORDER_SENT_STATUS,
   TODAY,
   SIX_SYSTEM_STARS,
-  DEFAULT_PAGE_SIZE
+  DEFAULT_PAGE_SIZE,
+  IMAGES_FORMATS_ALLOWED
 };
