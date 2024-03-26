@@ -1,3 +1,49 @@
+<!-- sldsValidatorIgnore -->
 <template>
-    
+  <lightning-card icon-name="standard:pricebook">
+    <h1 slot="title">{label.CARD_TITLE_BEpricebook}</h1>
+    <lightning-button
+      label={label.BUTTON_NewPriceBook}
+      slot="actions"
+      onclick={openNewPriceBookModal}
+    ></lightning-button>
+    <lightning-layout multiple-rows>
+      <template lwc:if={isLoading}>
+        <lightning-layout-item size="12" class="slds-align_absolute-center">
+          <c-spinner size="medium"></c-spinner>
+        </lightning-layout-item>
+      </template>
+      <template lwc:else>
+        <!-- Datatable -->
+        <lightning-layout-item size="12">
+          <lightning-datatable
+            key-field="id"
+            data={data}
+            columns={columns}
+            default-sort-direction={defaultSortDirection}
+            sorted-direction={sortDirection}
+            sorted-by={sortedBy}
+            onsort={onHandleSort}
+            hide-checkbox-column
+            onrowaction={handleRowAction}
+          >
+          </lightning-datatable>
+        </lightning-layout-item>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+  <c-add-new-price-book-modal
+    lwc:if={isNewPriceBookModalVisible}
+    onclosemodal={closeModal}
+  ></c-add-new-price-book-modal>
+  <c-edit-price-book-modal
+    lwc:if={isEditPriceBookModalVisible}
+    pricebook={selectedPriceBook}
+    onclosemodal={closeModal}
+  ></c-edit-price-book-modal>
+  <c-add-products-to-price-book-modal
+    lwc:if={isAddProductModalVisible}
+    pricebook={selectedPriceBook}
+    onclosemodal={closeModal}
+  ></c-add-products-to-price-book-modal>
 </template>

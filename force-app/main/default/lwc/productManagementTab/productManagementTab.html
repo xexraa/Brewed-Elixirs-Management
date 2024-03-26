@@ -219,6 +219,7 @@
                         for:each={productImages}
                         for:item="productImage"
                       >
+                        <!-- Selected main image -->
                         <template lwc:if={productImage.IsMainImage__c}>
                           <lightning-layout-item
                             key={productImage.Id}
@@ -235,9 +236,7 @@
                                 <lightning-input
                                   type="radio"
                                   name="mainImage"
-                                  value={productImage.Id}
                                   checked={productImage.IsMainImage__c}
-                                  onchange={handleMainImageChange}
                                 ></lightning-input>
                               </lightning-layout-item>
 
@@ -278,7 +277,9 @@
                           <lightning-layout-item
                             key={productImage.Id}
                             size="12"
-                            class="slds-box slds-var-m-bottom_x-small"
+                            class="slds-box slds-var-m-bottom_x-small radio-input-container"
+                            data-id={productImage.Id}
+                            onclick={handleMainImageChange}
                           >
                             <lightning-layout
                               class="slds-var-p-vertical_xx-small"

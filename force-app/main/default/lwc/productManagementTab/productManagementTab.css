@@ -11,6 +11,10 @@
   transition: box-shadow 0.3s ease-in-out;
 }
 
+.radio-input-container {
+  cursor: pointer;
+}
+
 .image-container {
   width: 84px;
   height: 70px;

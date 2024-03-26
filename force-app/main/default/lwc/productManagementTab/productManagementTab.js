@@ -110,7 +110,7 @@ export default class ProductManagementTab extends LightningElement {
       productData.IsActive = this.isActive;
 
       if (!this.productId) {
-        this.launchInsertProductWithDefaultImage(productData);
+        this.launchInsertProductWithDefaultImage(productData); // TODO: change method name?, deleted default image
       } else {
         this.launchUpdateProduct(productData);
       }
@@ -128,7 +128,7 @@ export default class ProductManagementTab extends LightningElement {
         );
 
         this.populateCmpWithDetails(result);
-        this.loadProductImages();
+        // this.loadProductImages();
       })
       .catch((error) => {
         ToastUtility.displayToast(
@@ -190,7 +190,11 @@ export default class ProductManagementTab extends LightningElement {
   }
 
   handleMainImageChange(event) {
-    this.launchUpdateMainImage(event.target.value);
+    const productId = event.currentTarget.dataset.id
+      ? event.currentTarget.dataset.id
+      : event.target.value;
+
+    this.launchUpdateMainImage(productId);
   }
 
   launchUpdateMainImage(imageId) {

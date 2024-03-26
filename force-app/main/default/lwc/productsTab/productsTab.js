@@ -12,7 +12,7 @@ import * as LABELS from "c/labelsManagement";
 const COLUMNS = [
   {
     label: LABELS.LABEL_Name,
-    fieldName: "Id",
+    fieldName: "Name",
     type: "button",
     sortable: true,
     typeAttributes: {
@@ -66,7 +66,7 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
 
   isLoading = true;
   defaultSortDirection = "asc";
-  sortDirection = "asc";
+  sortDirection;
   sortedBy;
   keyword;
   wiredProductsResult;
@@ -153,6 +153,8 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
     } else {
       this.recordsToDisplay = this.originalRecords.slice(startIndex, endIndex);
     }
+
+    this.refreshSortState();
   }
 
   handleKeyWordChange(event) {
@@ -175,7 +177,6 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
     this.paginationHelper();
   }
 
-  // Handle row actions
   handleRowAction(event) {
     const action = event.detail.action;
     const rowId = event.detail.row.Id;
@@ -221,6 +222,12 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
     this.recordsToDisplay = cloneData;
     this.sortDirection = sortDirection;
     this.sortedBy = sortedBy;
+  }
+
+  refreshSortState() {
+    this.recordsToDisplay.sort(
+      this.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
+    );
   }
 
   refreshCmp() {

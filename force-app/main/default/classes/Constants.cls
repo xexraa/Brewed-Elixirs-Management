@@ -11,4 +11,6 @@ public class Constants {
     public static final String SUMMARY_EMAIL_TEMPLATE = 'Brewed_Elixirs_Summary';
     public static final String ORDER_SENT_EMAIL_TEMPLATE = 'Brewed_Elixirs_Order_Sent';
     public static final String DEFAULT_IMAGE_NAME = 'DefaultImage';
+    public static final String BREWED_ELIXIRS_TYPE_COFFEE = 'Coffee';
+    public static final String BREWED_ELIXIRS_TYPE_TEA = 'Tea';
 }

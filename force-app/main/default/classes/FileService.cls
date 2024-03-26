@@ -2,26 +2,6 @@ public with sharing class FileService {
 
     private final static String DEFAULT_IMAGE_NAME = Constants.DEFAULT_IMAGE_NAME;
 
-    public static void assignImagesToProduct(Id documentId, Id contentVersionId, Id productId) {
-        ContentDocumentLink link = new ContentDocumentLink(
-            ContentDocumentId = documentId,
-            LinkedEntityId = productId,
-            ShareType = 'V',
-            Visibility = 'AllUsers'
-        );
-        insert link;
-
-        ContentDistribution cd = new ContentDistribution(
-            Name = productId,
-            ContentVersionId = contentVersionId,
-            PreferencesAllowViewInBrowser = true
-        );
-        // insert cd;
-
-        system.debug('link ' + link);
-        system.debug('cd ' + cd);
-    }
-
     public static void assignDefaultImageToProduct(Id productId) {
         StaticResource sr = [SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = :DEFAULT_IMAGE_NAME LIMIT 1];
 
@@ -33,8 +13,6 @@ public with sharing class FileService {
         cv.IsMainImage__c = true;
         
         insert cv;
-
-        system.debug('cv ' + cv);
     }
 
     public static List<ContentVersion> getProductImages(Id productId) {
@@ -65,18 +43,6 @@ public with sharing class FileService {
         );
     }
 
-    public static List<String> getImagesForProduct(Id productId) {
-        List<String> imageUrls = new List<String>();
-        
-        List<ContentDocumentLink> documentLinks = [SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :productId];
-        
-        for (ContentDocumentLink link : documentLinks) {
-            imageUrls.add('/sfc/servlet.shepherd/version/download/' + link.ContentDocumentId);
-        }
-        
-        return imageUrls;
-    }
-
     private static String getFileExtension(String contentType) {
         return contentType.substringAfter('image/');
     }
@@ -101,5 +67,25 @@ public with sharing class FileService {
     //         );
     //         insert cd;
     //     }
+    // }
+
+    // public static void assignImagesToProduct(Id documentId, Id contentVersionId, Id productId) {
+    //     ContentDocumentLink link = new ContentDocumentLink(
+    //         ContentDocumentId = documentId,
+    //         LinkedEntityId = productId,
+    //         ShareType = 'V',
+    //         Visibility = 'AllUsers'
+    //     );
+    //     insert link;
+
+    //     ContentDistribution cd = new ContentDistribution(
+    //         Name = productId,
+    //         ContentVersionId = contentVersionId,
+    //         PreferencesAllowViewInBrowser = true
+    //     );
+    //     // insert cd;
+
+    //     system.debug('link ' + link);
+    //     system.debug('cd ' + cd);
     // }
 }
