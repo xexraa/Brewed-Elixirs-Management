@@ -2,7 +2,7 @@ import { LightningElement } from "lwc";
 
 import insertPriceBook from "@salesforce/apex/AddNewPriceBookModalController.insertPriceBook";
 
-import ToastUtility from "c/utility";
+import { ToastUtility } from "c/utility";
 import * as LABELS from "c/labelsManagement";
 
 export default class AddNewPriceBookModal extends LightningElement {
@@ -49,7 +49,6 @@ export default class AddNewPriceBookModal extends LightningElement {
     }
   }
 
-  // Before save check
   isInputValid() {
     let isValid = true;
     let inputFields = this.template.querySelectorAll(".validate");

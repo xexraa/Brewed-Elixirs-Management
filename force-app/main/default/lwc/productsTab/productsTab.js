@@ -5,7 +5,7 @@ import { NavigationMixin } from "lightning/navigation";
 
 import getProducts from "@salesforce/apex/ProductsTabController.getProducts";
 
-import ToastUtility from "c/utility";
+import { ToastUtility, SortUtility } from "c/utility";
 import { DEFAULT_PAGE_SIZE } from "c/constants";
 import * as LABELS from "c/labelsManagement";
 
@@ -198,27 +198,13 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
     });
   }
 
-  sortBy(field, reverse, primer) {
-    const key = primer
-      ? function (x) {
-          return primer(x[field]);
-        }
-      : function (x) {
-          return x[field];
-        };
-
-    return function (a, b) {
-      a = key(a);
-      b = key(b);
-      return reverse * ((a > b) - (b > a));
-    };
-  }
-
   onHandleSort(event) {
     const { fieldName: sortedBy, sortDirection } = event.detail;
     const cloneData = [...this.recordsToDisplay];
 
-    cloneData.sort(this.sortBy(sortedBy, sortDirection === "asc" ? 1 : -1));
+    cloneData.sort(
+      SortUtility.sortBy(sortedBy, sortDirection === "asc" ? 1 : -1)
+    );
     this.recordsToDisplay = cloneData;
     this.sortDirection = sortDirection;
     this.sortedBy = sortedBy;
@@ -226,7 +212,7 @@ export default class ProductsTab extends NavigationMixin(LightningElement) {
 
   refreshSortState() {
     this.recordsToDisplay.sort(
-      this.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
+      SortUtility.sortBy(this.sortedBy, this.sortDirection === "asc" ? 1 : -1)
     );
   }
 

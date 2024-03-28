@@ -4,12 +4,14 @@ import { CurrentPageReference } from "lightning/navigation";
 
 import getAllPriceBooks from "@salesforce/apex/PriceManagementTabController.getAllPriceBooks";
 
-import ToastUtility from "c/utility";
+import { ToastUtility, SortUtility } from "c/utility";
 import * as LABELS from "c/labelsManagement";
 
 const ACTIONS = [
   { label: LABELS.LABEL_Edit, name: "edit" },
-  { label: LABELS.LABEL_AddProducts, name: "addProduct" }
+  { label: LABELS.LABEL_AddProducts, name: "addProducts" },
+  { label: LABELS.LABEL_DeleteProducts, name: "deleteProducts" },
+  { label: LABELS.LABEL_ModifyPrices, name: "modifyPrices" }
 ];
 
 const COLUMNS = [
@@ -52,16 +54,6 @@ const COLUMNS = [
     fieldName: "IsActive",
     type: "boolean",
     sortable: true
-  },
-  {
-    label: LABELS.LABEL_Description,
-    fieldName: "Description",
-    type: "text",
-    sortable: true
-  },
-  {
-    type: "action",
-    typeAttributes: { rowActions: ACTIONS }
   }
 ];
 
@@ -72,7 +64,9 @@ export default class PriceManagementTab extends LightningElement {
   isLoading = true;
   isNewPriceBookModalVisible = false;
   isEditPriceBookModalVisible = false;
-  isAddProductModalVisible = false;
+  isAddProductsModalVisible = false;
+  isDeleteProductsModalVisible = false;
+  isModifyPricesModalVisible = false;
 
   wiredPriceBooksResult;
   data = [];
@@ -80,6 +74,13 @@ export default class PriceManagementTab extends LightningElement {
   defaultSortDirection = "asc";
   sortDirection;
   sortedBy;
+
+  constructor() {
+    super();
+    this.columns = this.columns.concat([
+      { type: "action", typeAttributes: { rowActions: this.getRowActions } }
+    ]);
+  }
 
   @wire(CurrentPageReference)
   wiredPageRef() {
@@ -103,6 +104,21 @@ export default class PriceManagementTab extends LightningElement {
     this.isLoading = false;
   }
 
+  getRowActions(row, doneCallback) {
+    let actions = [];
+
+    if (row.IsInactive__c) {
+      actions.push({
+        label: LABELS.LABEL_Disabled,
+        disabled: true
+      });
+    } else {
+      actions = ACTIONS;
+    }
+
+    doneCallback(actions);
+  }
+
   handleRowAction(event) {
     const actionName = event.detail.action.name;
     const row = event.detail.row;
@@ -112,8 +128,16 @@ export default class PriceManagementTab extends LightningElement {
         this.editSelectedPriceBook(row);
         break;
 
-      case "addProduct":
-        this.addProductToPriceBook(row);
+      case "addProducts":
+        this.addProductsToPriceBook(row);
+        break;
+
+      case "deleteProducts":
+        this.deleteProductsFromPriceBook(row);
+        break;
+
+      case "modifyPrices":
+        this.modifyPricesInPriceBook(row);
         break;
 
       default:
@@ -126,44 +150,40 @@ export default class PriceManagementTab extends LightningElement {
 
   editSelectedPriceBook(pricebook) {
     this.selectedPriceBook = pricebook;
-    console.log(JSON.stringify(pricebook));
     this.isEditPriceBookModalVisible = true;
   }
 
-  addProductToPriceBook(pricebook) {
+  addProductsToPriceBook(pricebook) {
     this.selectedPriceBook = pricebook;
-    console.log(JSON.stringify(pricebook));
-    this.isAddProductModalVisible = true;
+    this.isAddProductsModalVisible = true;
+  }
+
+  deleteProductsFromPriceBook(pricebook) {
+    this.selectedPriceBook = pricebook;
+    this.isDeleteProductsModalVisible = true;
+  }
+
+  modifyPricesInPriceBook(pricebook) {
+    this.selectedPriceBook = pricebook;
+    this.isModifyPricesModalVisible = true;
   }
 
   closeModal() {
     this.refreshCmp();
     this.isEditPriceBookModalVisible = false;
-    this.isAddProductModalVisible = false;
     this.isNewPriceBookModalVisible = false;
-  }
-
-  sortBy(field, reverse, primer) {
-    const key = primer
-      ? function (x) {
-          return primer(x[field]);
-        }
-      : function (x) {
-          return x[field];
-        };
-
-    return function (a, b) {
-      a = key(a);
-      b = key(b);
-      return reverse * ((a > b) - (b > a));
-    };
+    this.isAddProductsModalVisible = false;
+    this.isDeleteProductsModalVisible = false;
+    this.isModifyPricesModalVisible = false;
   }
 
   onHandleSort(event) {
     const { fieldName: sortedBy, sortDirection } = event.detail;
     const cloneData = [...this.data];
 
-    cloneData.sort(this.sortBy(sortedBy, sortDirection === "asc" ? 1 : -1));
+    cloneData.sort(
+      SortUtility.sortBy(sortedBy, sortDirection === "asc" ? 1 : -1)
+    );
     this.data = cloneData;
     this.sortDirection = sortDirection;
     this.sortedBy = sortedBy;

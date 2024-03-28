@@ -1,13 +1,13 @@
 import { LightningElement, wire } from "lwc";
 import { CurrentPageReference } from "lightning/navigation";
 
-import getProductById from "@salesforce/apex/ProductManagementTabController.getProductById";
+import getProductByIdWithStandardPrice from "@salesforce/apex/ProductManagementTabController.getProductByIdWithStandardPrice";
 import getProductImages from "@salesforce/apex/ProductManagementTabController.getProductImages";
-import insertProductWithDefaultImage from "@salesforce/apex/ProductManagementTabController.insertProductWithDefaultImage";
+import insertProduct from "@salesforce/apex/ProductManagementTabController.insertProduct";
 import updateProduct from "@salesforce/apex/ProductManagementTabController.updateProduct";
 import changeProductMainImage from "@salesforce/apex/ProductManagementTabController.changeProductMainImage";
 
-import ToastUtility from "c/utility";
+import { ToastUtility } from "c/utility";
 import { IMAGES_FORMATS_ALLOWED } from "c/constants";
 import * as LABELS from "c/labelsManagement";
 
@@ -26,11 +26,13 @@ export default class ProductManagementTab extends LightningElement {
   weight;
   description;
   isActive = false;
+  price;
   productImages = [];
   mainImageId;
 
   @wire(CurrentPageReference)
   wiredPageRef(ref) {
+    this.refreshCmp();
     if (ref.state.c__productId) {
       this.productId = ref.state.c__productId;
       this.loadProductDetails();
@@ -41,7 +43,7 @@ export default class ProductManagementTab extends LightningElement {
   loadProductDetails() {
     this.isLoading = true;
 
-    getProductById({ productId: this.productId })
+    getProductByIdWithStandardPrice({ productId: this.productId })
       .then((result) => {
         this.populateCmpWithDetails(result);
         this.isProductSectionVisible = true;
@@ -79,15 +81,16 @@ export default class ProductManagementTab extends LightningElement {
   }
 
   populateCmpWithDetails(product) {
-    this.productId = product.Id;
-    this.name = this.getFieldValue(product.Name);
-    this.mark = this.getFieldValue(product.Mark__c);
-    this.type = this.getFieldValue(product.Type__c);
-    this.subtype = this.getFieldValue(product.Subtype__c);
-    this.taste = this.getFieldValue(product.Taste__c);
-    this.weight = this.getFieldValue(product.Weight__c);
-    this.description = this.getFieldValue(product.Description);
-    this.isActive = product.IsActive;
+    this.productId = product.Product2Id;
+    this.name = this.getFieldValue(product.Product2.Name);
+    this.mark = this.getFieldValue(product.Product2.Mark__c);
+    this.type = this.getFieldValue(product.Product2.Type__c);
+    this.subtype = this.getFieldValue(product.Product2.Subtype__c);
+    this.taste = this.getFieldValue(product.Product2.Taste__c);
+    this.weight = this.getFieldValue(product.Product2.Weight__c);
+    this.description = this.getFieldValue(product.Product2.Description);
+    this.price = this.getFieldValue(product.UnitPrice);
+    this.isActive = product.Product2.IsActive;
   }
 
   getFieldValue(field) {
@@ -110,25 +113,24 @@ export default class ProductManagementTab extends LightningElement {
       productData.IsActive = this.isActive;
 
       if (!this.productId) {
-        this.launchInsertProductWithDefaultImage(productData); // TODO: change method name?, deleted default image
+        this.launchInsertProduct(productData);
       } else {
         this.launchUpdateProduct(productData);
       }
     }
   }
 
-  launchInsertProductWithDefaultImage(productData) {
+  launchInsertProduct(productData) {
     this.isLoading = true;
 
-    insertProductWithDefaultImage({ productData: productData })
+    insertProduct({ productData: productData, defaultPrice: this.price })
       .then((result) => {
         ToastUtility.displayToast(
           this.label.TOAST_Success_ProductSaved,
           "success"
         );
 
-        this.populateCmpWithDetails(result);
-        // this.loadProductImages();
+        this.productId = result;
       })
       .catch((error) => {
         ToastUtility.displayToast(
@@ -144,14 +146,12 @@ export default class ProductManagementTab extends LightningElement {
   launchUpdateProduct(productData) {
     this.isLoading = true;
 
-    updateProduct({ productData: productData })
-      .then((result) => {
+    updateProduct({ productData: productData, defaultPrice: this.price })
+      .then(() => {
         ToastUtility.displayToast(
           this.label.TOAST_Success_ProductSaved,
           "success"
         );
-
-        this.populateCmpWithDetails(result);
       })
       .catch((error) => {
         ToastUtility.displayToast(
@@ -182,10 +182,10 @@ export default class ProductManagementTab extends LightningElement {
   }
 
   handleChange(event) {
+    this[event.target.dataset.name] = event.target.value;
+
     if (event.target.dataset.name === "isActive") {
       this[event.target.dataset.name] = event.target.checked;
-    } else {
-      this[event.target.dataset.name] = event.target.value;
     }
   }
 
@@ -223,7 +223,7 @@ export default class ProductManagementTab extends LightningElement {
       });
   }
 
-  handleClear() {
+  handleCancel() {
     this.refreshCmp();
   }
 
@@ -236,6 +236,8 @@ export default class ProductManagementTab extends LightningElement {
   }
 
   refreshCmp() {
+    this.isLoading = false;
+    this.isProductSectionVisible = false;
     this.productId = undefined;
     this.name = undefined;
     this.mark = undefined;
@@ -245,7 +247,9 @@ export default class ProductManagementTab extends LightningElement {
     this.weight = undefined;
     this.description = undefined;
     this.isActive = false;
+    this.price = undefined;
     this.productImages = [];
+    this.mainImageId = undefined;
   }
 
   get acceptedFormats() {

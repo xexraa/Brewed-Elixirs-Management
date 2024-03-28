@@ -20,6 +20,7 @@
             key-field="id"
             data={data}
             columns={columns}
+            column-widths-mode="auto"
             default-sort-direction={defaultSortDirection}
             sorted-direction={sortDirection}
             sorted-by={sortedBy}
@@ -42,8 +43,18 @@
     onclosemodal={closeModal}
   ></c-edit-price-book-modal>
   <c-add-products-to-price-book-modal
-    lwc:if={isAddProductModalVisible}
+    lwc:if={isAddProductsModalVisible}
     pricebook={selectedPriceBook}
     onclosemodal={closeModal}
   ></c-add-products-to-price-book-modal>
+  <c-delete-products-from-price-book-modal
+    lwc:if={isDeleteProductsModalVisible}
+    pricebook={selectedPriceBook}
+    onclosemodal={closeModal}
+  ></c-delete-products-from-price-book-modal>
+  <c-modify-prices-in-price-book-modal
+    lwc:if={isModifyPricesModalVisible}
+    pricebook={selectedPriceBook}
+    onclosemodal={closeModal}
+  ></c-modify-prices-in-price-book-modal>
 </template>

@@ -6,6 +6,7 @@ import TOAST_Success_MainImageChanged from "@salesforce/label/c.TOAST_Success_Ma
 import TOAST_Success_PriceBookAdded from "@salesforce/label/c.TOAST_Success_PriceBookAdded";
 import TOAST_Success_PriceBookEdited from "@salesforce/label/c.TOAST_Success_PriceBookEdited";
 import TOAST_Success_General from "@salesforce/label/c.TOAST_Success_General";
+import TOAST_Success_DeleteGeneral from "@salesforce/label/c.TOAST_Success_DeleteGeneral";
 
 import CARD_TITLE_BEproducts from "@salesforce/label/c.CARD_TITLE_BEproducts";
 import CARD_TITLE_ProductDetails from "@salesforce/label/c.CARD_TITLE_ProductDetails";
@@ -30,12 +31,24 @@ import LABEL_IsActive from "@salesforce/label/c.LABEL_IsActive";
 import LABEL_Edit from "@salesforce/label/c.LABEL_Edit";
 import LABEL_AddProducts from "@salesforce/label/c.LABEL_AddProducts";
 import LABEL_Price from "@salesforce/label/c.LABEL_Price";
+import LABEL_DeleteProducts from "@salesforce/label/c.LABEL_DeleteProducts";
+import LABEL_ModifyPrices from "@salesforce/label/c.LABEL_ModifyPrices";
+import LABEL_ActualPrice from "@salesforce/label/c.LABEL_ActualPrice";
+import LABEL_Operation from "@salesforce/label/c.LABEL_Operation";
+import LABEL_Value from "@salesforce/label/c.LABEL_Value";
+import LABEL_Disabled from "@salesforce/label/c.LABEL_Disabled";
+import LABEL_SelectPrice from "@salesforce/label/c.LABEL_SelectPrice";
+import LABEL_DefaultPrice from "@salesforce/label/c.LABEL_DefaultPrice";
+import LABEL_OrSetPrice from "@salesforce/label/c.LABEL_OrSetPrice";
+import LABEL_SelectedProductsAndPrice from "@salesforce/label/c.LABEL_SelectedProductsAndPrice";
 
 import LABEL_ASK_IsActive from "@salesforce/label/c.LABEL_ASK_IsActive";
 import LABEL_ASK_Deactivate from "@salesforce/label/c.LABEL_ASK_Deactivate";
 import LABEL_INFO_ProductNoImg from "@salesforce/label/c.LABEL_INFO_ProductNoImg";
 import LABEL_INFO_AboutMainImage from "@salesforce/label/c.LABEL_INFO_AboutMainImage";
 import LABEL_INFO_AboutImageFormats from "@salesforce/label/c.LABEL_INFO_AboutImageFormats";
+import LABEL_INFO_NoMoreProducts from "@salesforce/label/c.LABEL_INFO_NoMoreProducts";
+import LABEL_INFO_NoProducts from "@salesforce/label/c.LABEL_INFO_NoProducts";
 
 import SHORTCUT_Of from "@salesforce/label/c.SHORTCUT_Of";
 
@@ -49,6 +62,8 @@ import MODAL_TITTLE_NewProduct from "@salesforce/label/c.MODAL_TITTLE_NewProduct
 import MODAL_TITTLE_NewPriceBook from "@salesforce/label/c.MODAL_TITTLE_NewProduct";
 import MODAL_TITTLE_EditPriceBook from "@salesforce/label/c.MODAL_TITTLE_EditPriceBook";
 import MODAL_TITLE_AddProducts from "@salesforce/label/c.MODAL_TITLE_AddProducts";
+import MODAL_TITLE_DeletePricebookEntry from "@salesforce/label/c.MODAL_TITLE_DeletePricebookEntry";
+import MODAL_TITLE_ModifyPrices from "@salesforce/label/c.MODAL_TITLE_ModifyPrices";
 import MODAL_SUBTITLE_PriceBook from "@salesforce/label/c.MODAL_SUBTITLE_PriceBook";
 
 import BUTTON_First from "@salesforce/label/c.BUTTON_First";
@@ -62,9 +77,12 @@ import BUTTON_Cancel from "@salesforce/label/c.BUTTON_Cancel";
 import BUTTON_Clear from "@salesforce/label/c.BUTTON_Clear";
 import BUTTON_Save from "@salesforce/label/c.BUTTON_Save";
 import BUTTON_NewPriceBook from "@salesforce/label/c.BUTTON_NewPriceBook";
+import BUTTON_Choose from "@salesforce/label/c.BUTTON_Choose";
+import BUTTON_Delete from "@salesforce/label/c.BUTTON_Delete";
 
 import VALIDATION_ERROR_StartDate from "@salesforce/label/c.VALIDATION_ERROR_StartDate";
 import VALIDATION_ERROR_EndDate from "@salesforce/label/c.VALIDATION_ERROR_EndDate";
+import VALIDATION_ERROR_Price from "@salesforce/label/c.VALIDATION_ERROR_Price";
 
 export {
   TOAST_Error,
@@ -75,6 +93,7 @@ export {
   TOAST_Success_PriceBookAdded,
   TOAST_Success_PriceBookEdited,
   TOAST_Success_General,
+  TOAST_Success_DeleteGeneral,
   CARD_TITLE_BEproducts,
   CARD_TITLE_ProductDetails,
   CARD_TITLE_BEpricebook,
@@ -97,11 +116,23 @@ export {
   LABEL_Edit,
   LABEL_AddProducts,
   LABEL_Price,
+  LABEL_DeleteProducts,
+  LABEL_ModifyPrices,
+  LABEL_ActualPrice,
+  LABEL_Operation,
+  LABEL_Value,
+  LABEL_Disabled,
+  LABEL_SelectPrice,
+  LABEL_DefaultPrice,
+  LABEL_OrSetPrice,
+  LABEL_SelectedProductsAndPrice,
   LABEL_ASK_IsActive,
   LABEL_ASK_Deactivate,
   LABEL_INFO_ProductNoImg,
   LABEL_INFO_AboutMainImage,
   LABEL_INFO_AboutImageFormats,
+  LABEL_INFO_NoMoreProducts,
+  LABEL_INFO_NoProducts,
   SHORTCUT_Of,
   PLACEHOLDER_Search,
   PLACEHOLDER_Coffee,
@@ -112,6 +143,8 @@ export {
   MODAL_TITTLE_NewPriceBook,
   MODAL_TITTLE_EditPriceBook,
   MODAL_TITLE_AddProducts,
+  MODAL_TITLE_DeletePricebookEntry,
+  MODAL_TITLE_ModifyPrices,
   MODAL_SUBTITLE_PriceBook,
   BUTTON_First,
   BUTTON_Previous,
@@ -124,6 +157,9 @@ export {
   BUTTON_Clear,
   BUTTON_Save,
   BUTTON_NewPriceBook,
+  BUTTON_Choose,
+  BUTTON_Delete,
   VALIDATION_ERROR_StartDate,
-  VALIDATION_ERROR_EndDate
+  VALIDATION_ERROR_EndDate,
+  VALIDATION_ERROR_Price
 };

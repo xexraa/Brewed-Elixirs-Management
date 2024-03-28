@@ -128,9 +128,34 @@
                 ></lightning-input>
               </lightning-layout-item>
 
+              <!-- Default price -->
+              <lightning-layout-item
+                size="3"
+                padding="around-small"
+                class="slds-align_absolute-center"
+              >
+                <div>
+                  <label for="price" class="slds-form-element__label">
+                    <span class="slds-required">*</span
+                    >{label.LABEL_DefaultPrice}
+                  </label>
+                  <input
+                    type="number"
+                    id="price"
+                    data-name="price"
+                    step=".01"
+                    value={price}
+                    class="slds-input validate"
+                    onchange={handleChange}
+                    min="0.01"
+                    required
+                  />
+                </div>
+              </lightning-layout-item>
+
               <!-- File uploader -->
               <lightning-layout-item
-                size="6"
+                size="12"
                 padding="around-small"
                 class="slds-align_absolute-center"
               >
@@ -140,6 +165,7 @@
                     class="slds-align_absolute-center"
                   >
                     <lightning-file-upload
+                      if:false={isProductId}
                       label={label.LABEL_UploadProductImage}
                       name="fileUploader"
                       accept={acceptedFormats}
@@ -147,7 +173,6 @@
                       onuploadfinished={handleUploadFinished}
                       multiple
                       class="file-selector-large"
-                      disabled={isProductId}
                     >
                     </lightning-file-upload>
                   </lightning-layout-item>
@@ -171,8 +196,8 @@
                 <lightning-layout class="slds-var-p-top_small">
                   <lightning-layout-item class="slds-var-p-right_medium">
                     <lightning-button
-                      label={label.BUTTON_Clear}
-                      onclick={handleClear}
+                      label={label.BUTTON_Cancel}
+                      onclick={handleCancel}
                     >
                     </lightning-button>
                   </lightning-layout-item>

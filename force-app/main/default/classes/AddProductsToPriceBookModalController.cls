@@ -3,7 +3,7 @@ public with sharing class AddProductsToPriceBookModalController {
     @AuraEnabled
     public static List<PricebookEntry> getStandardPricebookEntries(Id pricebookId) {
         try {
-            return Pricebook2Service.getStandardPricebookEntries(pricebookId);
+            return PricebookEntryService.getStandardPricebookEntries(pricebookId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -12,7 +12,7 @@ public with sharing class AddProductsToPriceBookModalController {
     @AuraEnabled
     public static void assignProductsToPriceBook(List<PricebookEntry> pricebookEntries) {
         try {
-            Pricebook2Service.assignProductsToPriceBook(pricebookEntries);
+            PricebookEntryDML.assignProductsToPriceBook(pricebookEntries);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

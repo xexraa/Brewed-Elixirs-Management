@@ -2,7 +2,7 @@ import { LightningElement, api } from "lwc";
 
 import updatePriceBook from "@salesforce/apex/EditPriceBookModalController.updatePriceBook";
 
-import ToastUtility from "c/utility";
+import { ToastUtility } from "c/utility";
 import * as LABELS from "c/labelsManagement";
 
 export default class EditPriceBookModal extends LightningElement {
@@ -18,7 +18,6 @@ export default class EditPriceBookModal extends LightningElement {
   name;
   startDate;
   endDate;
-  description;
 
   @api pricebook;
 
@@ -32,7 +31,6 @@ export default class EditPriceBookModal extends LightningElement {
     this.name = this.getFieldValue(pricebook.Name);
     this.startDate = this.getFieldValue(pricebook.Start_Date__c);
     this.endDate = this.getFieldValue(pricebook.End_Date__c);
-    this.description = this.getFieldValue(pricebook.Description);
   }
 
   getFieldValue(field) {
@@ -51,7 +49,6 @@ export default class EditPriceBookModal extends LightningElement {
       priceBookData.Name = this.name;
       priceBookData.Start_Date__c = this.startDate;
       priceBookData.End_Date__c = this.endDate;
-      priceBookData.Description = this.description;
 
       updatePriceBook({ priceBookData: priceBookData })
         .then(() => {
@@ -75,7 +72,6 @@ export default class EditPriceBookModal extends LightningElement {
     }
   }
 
-  // Before save check
   isInputValid() {
     let isValid = true;
     let inputFields = this.template.querySelectorAll(".validate");

@@ -1,9 +1,9 @@
 public with sharing class ProductManagementTabController {
     
     @AuraEnabled
-    public static Product2 getProductById(Id productId) {
+    public static PricebookEntry getProductByIdWithStandardPrice(Id productId) {
         try {
-            return Product2Service.getProductById(productId);
+            return PricebookEntryService.getProductByIdWithStandardPrice(productId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -19,18 +19,18 @@ public with sharing class ProductManagementTabController {
     }
 
     @AuraEnabled
-    public static Product2 insertProductWithDefaultImage(Product2 productData) {
+    public static Id insertProduct(Product2 productData, Decimal defaultPrice) {
         try {
-            return Product2Service.insertProductWithDefaultImage(productData);
+            return Product2Service.insertProduct(productData, defaultPrice);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
 
     @AuraEnabled
-    public static Product2 updateProduct(Product2 productData) {
+    public static void updateProduct(Product2 productData, Decimal defaultPrice) {
         try {
-            return Product2Service.updateProduct(productData);
+            Product2Service.updateProduct(productData, defaultPrice);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

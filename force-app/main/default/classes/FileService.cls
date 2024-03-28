@@ -2,19 +2,6 @@ public with sharing class FileService {
 
     private final static String DEFAULT_IMAGE_NAME = Constants.DEFAULT_IMAGE_NAME;
 
-    public static void assignDefaultImageToProduct(Id productId) {
-        StaticResource sr = [SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = :DEFAULT_IMAGE_NAME LIMIT 1];
-
-        ContentVersion cv = new ContentVersion();
-        cv.Title = sr.Name;
-        cv.PathOnClient = sr.Name + '.' + getFileExtension(sr.ContentType);
-        cv.VersionData = sr.Body;
-        cv.FirstPublishLocationId = productId;
-        cv.IsMainImage__c = true;
-        
-        insert cv;
-    }
-
     public static List<ContentVersion> getProductImages(Id productId) {
         Set<Id> contentDocumentIds = new Set<Id>();
 
@@ -43,9 +30,22 @@ public with sharing class FileService {
         );
     }
 
-    private static String getFileExtension(String contentType) {
-        return contentType.substringAfter('image/');
-    }
+    // private static String getFileExtension(String contentType) {
+    //     return contentType.substringAfter('image/');
+    // }
+
+    // public static void assignDefaultImageToProduct(Id productId) {
+    //     StaticResource sr = [SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = :DEFAULT_IMAGE_NAME LIMIT 1];
+
+    //     ContentVersion cv = new ContentVersion();
+    //     cv.Title = sr.Name;
+    //     cv.PathOnClient = sr.Name + '.' + getFileExtension(sr.ContentType);
+    //     cv.VersionData = sr.Body;
+    //     cv.FirstPublishLocationId = productId;
+    //     cv.IsMainImage__c = true;
+        
+    //     insert cv;
+    // }
 
     // public static void assignImageToProduct(String imageTitle, Id productId) {
     //     ContentVersion cv = [SELECT Id, ContentDocumentId, VersionDataUrl FROM ContentVersion WHERE Title = :imageTitle LIMIT 1];

@@ -13,4 +13,5 @@ public class Constants {
     public static final String DEFAULT_IMAGE_NAME = 'DefaultImage';
     public static final String BREWED_ELIXIRS_TYPE_COFFEE = 'Coffee';
     public static final String BREWED_ELIXIRS_TYPE_TEA = 'Tea';
+    public static final Id STANDARD_BE_PRICEBOOK_ID = [SELECT Id FROM Pricebook2 WHERE IsStandard = true LIMIT 1].Id;
 }

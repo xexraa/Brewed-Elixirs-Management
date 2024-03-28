@@ -1,7 +1,7 @@
 import { LightningElement, api } from "lwc";
 
-import getStandardPricebookEntries from "@salesforce/apex/AddProductsToPriceBookModalController.getStandardPricebookEntries";
-import assignProductsToPriceBook from "@salesforce/apex/AddProductsToPriceBookModalController.assignProductsToPriceBook";
+import getPricebookEntriesForPricebook from "@salesforce/apex/DeleteProductsFromPriceBookModalC.getPricebookEntriesForPricebook";
+import deletePricebookEntries from "@salesforce/apex/DeleteProductsFromPriceBookModalC.deletePricebookEntries";
 
 import { ToastUtility, SortUtility } from "c/utility";
 import * as LABELS from "c/labelsManagement";
@@ -12,23 +12,14 @@ const COLUMNS = [
     fieldName: "Name",
     type: "text",
     sortable: true
-  },
-  {
-    label: LABELS.LABEL_DefaultPrice,
-    fieldName: "UnitPrice",
-    type: "currency",
-    cellAttributes: { alignment: "left" },
-    sortable: true,
-    initialWidth: 120
   }
 ];
 
-export default class AddProductsToPriceBookModal extends LightningElement {
+export default class DeleteProductsFromPriceBookModal extends LightningElement {
   label = LABELS;
   columns = COLUMNS;
 
   isLoading = false;
-  isEditSectionVisible = false;
   defaultSortDirection = "asc";
   sortDirection;
   sortedBy;
@@ -39,13 +30,13 @@ export default class AddProductsToPriceBookModal extends LightningElement {
   @api pricebook;
 
   connectedCallback() {
-    this.launchGetStandardPricebookEntries();
+    this.launchGetPricebookEntriesForPricebook();
   }
 
-  launchGetStandardPricebookEntries() {
+  launchGetPricebookEntriesForPricebook() {
     this.isLoading = true;
 
-    getStandardPricebookEntries({ pricebookId: this.pricebook.Id })
+    getPricebookEntriesForPricebook({ pricebookId: this.pricebook.Id })
       .then((result) => {
         this.recordsToDisplay = result;
       })
@@ -60,14 +51,6 @@ export default class AddProductsToPriceBookModal extends LightningElement {
       });
   }
 
-  assignNewPrice(newValue) {
-    this.selectedProducts.forEach((product) => {
-      product.UnitPrice = newValue;
-    });
-
-    this.selectedProducts = [...this.selectedProducts];
-  }
-
   handleRowSelection(event) {
     this.selectedProducts = event.detail.selectedRows;
   }
@@ -79,17 +62,17 @@ export default class AddProductsToPriceBookModal extends LightningElement {
     this.selectedProducts.forEach((product) => {
       let pricebookEntry = {
         sobjectType: "PricebookEntry",
-        UnitPrice: product.UnitPrice,
-        Product2Id: product.Product2Id,
-        Pricebook2Id: this.pricebook.Id,
-        IsActive: true
+        Id: product.Id
       };
       pricebookEntries.push(pricebookEntry);
     });
 
-    assignProductsToPriceBook({ pricebookEntries: pricebookEntries })
+    deletePricebookEntries({ pricebookEntries: pricebookEntries })
       .then(() => {
-        ToastUtility.displayToast(this.label.TOAST_Success_General, "success");
+        ToastUtility.displayToast(
+          this.label.TOAST_Success_DeleteGeneral,
+          "success"
+        );
         this.closeModal();
       })
       .catch((error) => {
@@ -101,10 +84,6 @@ export default class AddProductsToPriceBookModal extends LightningElement {
       .finally(() => {
         this.isLoading = false;
       });
-  }
-
-  handleChoose() {
-    this.isEditSectionVisible = true;
   }
 
   closeModal() {
@@ -124,7 +103,7 @@ export default class AddProductsToPriceBookModal extends LightningElement {
     this.sortedBy = sortedBy;
   }
 
-  get isSelectedProducts() {
+  get isDisabled() {
     return this.selectedProducts.length === 0 ? true : false;
   }
 

@@ -1,6 +1,60 @@
 public with sharing class PricebookEntryService {
     
     private final static Date TODAY = Constants.TODAY;
+    private final static Id STANDARD_BE_PRICEBOOK_ID = Constants.STANDARD_BE_PRICEBOOK_ID;
+
+    public static List<PricebookEntry> getStandardPricebookEntries(Id pricebookId) {
+        Set<Id> existingProductIds = new Set<Id>();
+
+        for (PricebookEntry existingEntry : [SELECT Product2Id FROM PricebookEntry WHERE Pricebook2Id = :pricebookId]) {
+            existingProductIds.add(existingEntry.Product2Id);
+        }
+    
+        return [
+            SELECT Id, Name, UnitPrice, Product2Id 
+            FROM PricebookEntry 
+            WHERE Pricebook2.IsStandard = true 
+            AND Product2Id NOT IN :existingProductIds
+            WITH SECURITY_ENFORCED
+        ];
+    }
+
+    public static PricebookEntry getProductByIdWithStandardPrice(Id productId) {
+        return [
+            SELECT UnitPrice, Product2.Name, Product2.Mark__c, Product2.Subtype__c, Product2.Taste__c, Product2.Type__c, Product2.Weight__c, Product2.IsActive, Product2.Description
+            FROM PricebookEntry
+            WHERE Product2Id = :productId
+            AND Pricebook2.IsStandard = true
+            LIMIT 1
+        ];
+    }
+
+    public static List<PricebookEntry> getPricebookEntriesForPricebook(Id pricebookId) {   
+        return [SELECT Id, Name, UnitPrice FROM PricebookEntry WHERE Pricebook2Id = :pricebookId WITH SECURITY_ENFORCED];
+    }
+
+    public static void createStandardPriceBookEntry(Id productId, Decimal defaultPrice) {
+        insert new PricebookEntry(
+            Pricebook2Id = STANDARD_BE_PRICEBOOK_ID,
+            Product2Id = productId,
+            UnitPrice = defaultPrice,
+            IsActive = true
+        );
+    }
+
+    public static void updateStandardPrice(Id productId, Decimal defaultPrice) {
+        PricebookEntry standardPricebookEntry = [
+            SELECT Id, UnitPrice
+            FROM PricebookEntry
+            WHERE Product2Id = :productId
+            AND Pricebook2.IsStandard = true
+            LIMIT 1
+        ];
+
+        standardPricebookEntry.UnitPrice = defaultPrice;
+
+        update standardPricebookEntry;
+    }
 
     public static ProductFullDescriptionWrapper getProductById(Id productId) {
         PricebookEntry productEntry = [

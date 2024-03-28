@@ -28,7 +28,7 @@
         >
           <lightning-layout>
             <lightning-layout-item size="12">
-              <!-- Name && Description -->
+              <!-- Name -->
               <lightning-layout horizontal-align="center" multiple-rows="true">
                 <lightning-layout-item
                   size="12"
@@ -48,25 +48,6 @@
                     onchange={handleChange}
                     value={name}
                     required
-                  />
-                </lightning-layout-item>
-                <lightning-layout-item
-                  size="12"
-                  large-device-size="6"
-                  medium-device-size="6"
-                  small-device-size="12"
-                  padding="around-small"
-                >
-                  <label for="description" class="slds-form-element__label">
-                    {label.LABEL_Description}
-                  </label>
-                  <input
-                    type="text"
-                    id="description"
-                    data-name="description"
-                    class="slds-input validate"
-                    onchange={handleChange}
-                    value={description}
                   />
                 </lightning-layout-item>
               </lightning-layout>
