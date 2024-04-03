@@ -16,6 +16,32 @@ public with sharing class FileService {
         return [SELECT VersionDataUrl, IsMainImage__c, Title, FileExtension FROM ContentVersion WHERE ContentDocumentId IN :contentDocumentIds];
     }
 
+    public static void assignProductMainImage(Id imageId, Id productId) {
+        List<ContentDocumentLink> productDocumentLinks = [SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = :productId];
+
+        Set<Id> documentIds = new Set<Id>();
+        for(ContentDocumentLink link : productDocumentLinks) {
+            documentIds.add(link.ContentDocumentId);
+        }
+
+        List<ContentVersion> productContentVersions = [SELECT Id, IsMainImage__c FROM ContentVersion WHERE Id IN :documentIds];
+
+        Boolean mainImageExists = false;
+        for(ContentVersion cv : productContentVersions) {
+            if (cv.IsMainImage__c) {
+                mainImageExists = true;
+                break;
+            }
+        }
+
+        if (!mainImageExists) {
+            update new ContentVersion(
+                Id = imageId,
+                IsMainImage__c = true
+            );
+        }
+    }
+
     public static void changeProductMainImage(Id oldImageId, Id newImageId) {
         if (oldImageId != null) {
             update new ContentVersion(
@@ -30,62 +56,19 @@ public with sharing class FileService {
         );
     }
 
-    // private static String getFileExtension(String contentType) {
-    //     return contentType.substringAfter('image/');
-    // }
+    public static String getProductMainImage(Id productId) {
+        List<ContentVersion> productImages = getProductImages(productId);
+        String imageUrl;
 
-    // public static void assignDefaultImageToProduct(Id productId) {
-    //     StaticResource sr = [SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = :DEFAULT_IMAGE_NAME LIMIT 1];
-
-    //     ContentVersion cv = new ContentVersion();
-    //     cv.Title = sr.Name;
-    //     cv.PathOnClient = sr.Name + '.' + getFileExtension(sr.ContentType);
-    //     cv.VersionData = sr.Body;
-    //     cv.FirstPublishLocationId = productId;
-    //     cv.IsMainImage__c = true;
-        
-    //     insert cv;
-    // }
-
-    // public static void assignImageToProduct(String imageTitle, Id productId) {
-    //     ContentVersion cv = [SELECT Id, ContentDocumentId, VersionDataUrl FROM ContentVersion WHERE Title = :imageTitle LIMIT 1];
-
-    //     if (cv != null) {
-    //         ContentDocumentLink link = new ContentDocumentLink();
-    //         link.ContentDocumentId = cv.ContentDocumentId;
-    //         link.LinkedEntityId = productId;
-    //         link.ShareType = 'V';
-    //         link.Visibility = 'AllUsers';
-    //         insert link;
-
-    //         Product2Service.updateProductImageUrl(cv.VersionDataUrl, productId);
-
-    //         ContentDistribution cd = new ContentDistribution(
-    //             Name = productId,
-    //             ContentVersionId = cv.Id,
-    //             PreferencesAllowViewInBrowser = true
-    //         );
-    //         insert cd;
-    //     }
-    // }
-
-    // public static void assignImagesToProduct(Id documentId, Id contentVersionId, Id productId) {
-    //     ContentDocumentLink link = new ContentDocumentLink(
-    //         ContentDocumentId = documentId,
-    //         LinkedEntityId = productId,
-    //         ShareType = 'V',
-    //         Visibility = 'AllUsers'
-    //     );
-    //     insert link;
-
-    //     ContentDistribution cd = new ContentDistribution(
-    //         Name = productId,
-    //         ContentVersionId = contentVersionId,
-    //         PreferencesAllowViewInBrowser = true
-    //     );
-    //     // insert cd;
-
-    //     system.debug('link ' + link);
-    //     system.debug('cd ' + cd);
-    // }
+        if (!productImages.isEmpty()) {
+            for (ContentVersion image : productImages) {
+                if (image.IsMainImage__c) {
+                    return imageUrl = image.VersionDataUrl;
+                }
+            }
+            return imageUrl = productImages[0].VersionDataUrl;
+        } else {
+            return imageUrl = '/resource/' + DEFAULT_IMAGE_NAME;
+        }
+    }
 }

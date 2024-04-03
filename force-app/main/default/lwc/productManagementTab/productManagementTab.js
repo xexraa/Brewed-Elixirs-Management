@@ -5,6 +5,7 @@ import getProductByIdWithStandardPrice from "@salesforce/apex/ProductManagementT
 import getProductImages from "@salesforce/apex/ProductManagementTabController.getProductImages";
 import insertProduct from "@salesforce/apex/ProductManagementTabController.insertProduct";
 import updateProduct from "@salesforce/apex/ProductManagementTabController.updateProduct";
+import assignProductMainImage from "@salesforce/apex/ProductManagementTabController.assignProductMainImage";
 import changeProductMainImage from "@salesforce/apex/ProductManagementTabController.changeProductMainImage";
 
 import { ToastUtility } from "c/utility";
@@ -227,8 +228,25 @@ export default class ProductManagementTab extends LightningElement {
     this.refreshCmp();
   }
 
-  handleUploadFinished() {
-    this.loadProductImages();
+  handleUploadFinished(event) {
+    this.isLoading = true;
+
+    assignProductMainImage({
+      imageId: event.detail.files[0].contentVersionId,
+      productId: this.productId
+    })
+      .then(() => {
+        this.loadProductImages();
+      })
+      .catch((error) => {
+        ToastUtility.displayToast(
+          error.body.message || this.label.TOAST_Error,
+          "error"
+        );
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   openNewProductSection() {

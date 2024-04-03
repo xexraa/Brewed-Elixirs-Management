@@ -8,4 +8,13 @@ public with sharing class PriceManagementTabController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled
+    public static List<PricebookEntry> getPricebookEntriesForPricebook(Id pricebookId) {
+        try {
+            return PricebookEntryService.getPricebookEntriesForPricebook(pricebookId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 }

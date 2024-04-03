@@ -36,13 +36,16 @@ export default class ModifyPricesInPriceBookModal extends LightningElement {
 
   isLoading = false;
   isEditSectionVisible = false;
+  calculateActive = false;
   defaultSortDirection = "asc";
   sortDirection;
   sortedBy;
   selectedOperation = "add";
+  originalPrice = 0;
 
   recordsToDisplay = [];
   selectedProducts = [];
+  selectedProductsCopy;
 
   @api pricebook;
 
@@ -70,6 +73,9 @@ export default class ModifyPricesInPriceBookModal extends LightningElement {
 
   handleRowSelection(event) {
     this.selectedProducts = event.detail.selectedRows;
+    this.selectedProductsCopy = JSON.parse(
+      JSON.stringify(this.selectedProducts)
+    );
   }
 
   handleSave() {
@@ -135,6 +141,13 @@ export default class ModifyPricesInPriceBookModal extends LightningElement {
     const operation = this.selectedOperation;
     const value = parseFloat(event.target.value);
 
+    if (!this.calculateActive) {
+      this.calculateActive = true;
+      this.selectedProducts = JSON.parse(
+        JSON.stringify(this.selectedProductsCopy)
+      );
+    }
+
     this.selectedProducts.forEach((product) => {
       if (operation === "add") {
         product.UnitPrice += value;
@@ -142,11 +155,13 @@ export default class ModifyPricesInPriceBookModal extends LightningElement {
         const percentValue = product.UnitPrice * (value / 100);
         product.UnitPrice += percentValue;
       } else if (operation === "subtract") {
-        product.UnitPrice -= value;
+        product.UnitPrice = Math.max(product.UnitPrice - value, 0.01);
       } else if (operation === "subtractPercent") {
         const percentValue = product.UnitPrice * (value / 100);
-        product.UnitPrice -= percentValue;
+        product.UnitPrice = Math.max(product.UnitPrice - percentValue, 0.01);
       }
+
+      product.UnitPrice = Number.parseFloat(product.UnitPrice.toFixed(2));
     });
 
     this.selectedProducts = [...this.selectedProducts];
@@ -154,6 +169,10 @@ export default class ModifyPricesInPriceBookModal extends LightningElement {
 
   setNewPrice(event) {
     const value = parseFloat(event.target.value);
+    this.calculateActive = false;
+    this.selectedProducts = JSON.parse(
+      JSON.stringify(this.selectedProductsCopy)
+    );
 
     this.selectedProducts.forEach((product) => {
       product.UnitPrice = value;

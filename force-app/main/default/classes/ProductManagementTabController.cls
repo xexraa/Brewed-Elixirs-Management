@@ -37,6 +37,15 @@ public with sharing class ProductManagementTabController {
     }
 
     @AuraEnabled
+    public static void assignProductMainImage(Id imageId, Id productId) {
+        try {
+            FileService.assignProductMainImage(imageId, productId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static void changeProductMainImage(Id oldImageId, Id newImageId) {
         try {
             FileService.changeProductMainImage(oldImageId, newImageId);

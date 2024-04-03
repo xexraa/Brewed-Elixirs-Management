@@ -67,7 +67,7 @@ public with sharing class PricebookEntryService {
             AND Product2.IsActive = true
             LIMIT 1
         ];
-
+        
         return new ProductFullDescriptionWrapper(
             productEntry.Product2Id,
             productEntry.Product2.Name,
@@ -77,7 +77,7 @@ public with sharing class PricebookEntryService {
             productEntry.Product2.Mark__c,
             productEntry.Product2.Weight__c,
             productEntry.Product2.Taste__c,
-            productEntry.Product2.ImageUrl__c
+            FileService.getProductMainImage(productEntry.Product2Id)
         );
     }
 
@@ -104,7 +104,7 @@ public with sharing class PricebookEntryService {
                 entry.Product2.Mark__c,
                 entry.Product2.Weight__c,
                 entry.Product2.Taste__c,
-                entry.Product2.ImageUrl__c             
+                FileService.getProductMainImage(entry.Product2Id)          
             ));
         }
 
@@ -135,7 +135,7 @@ public with sharing class PricebookEntryService {
                     entry.Product2.Mark__c,
                     entry.Product2.Weight__c,
                     entry.Product2.Taste__c,
-                    entry.Product2.ImageUrl__c             
+                    FileService.getProductMainImage(entry.Product2Id)           
                 ));
             }
         }
@@ -163,7 +163,7 @@ public with sharing class PricebookEntryService {
                 entry.Product2.Name,
                 entry.UnitPrice,
                 entry.CurrencyIsoCode,
-                entry.Product2.ImageUrl__c
+                FileService.getProductMainImage(entry.Product2Id) 
             ));
         }
 
@@ -189,7 +189,7 @@ public with sharing class PricebookEntryService {
                 entry.Product2.Name,
                 entry.UnitPrice,
                 entry.CurrencyIsoCode,
-                entry.Product2.ImageUrl__c
+                FileService.getProductMainImage(entry.Product2Id) 
             ));
         }
 

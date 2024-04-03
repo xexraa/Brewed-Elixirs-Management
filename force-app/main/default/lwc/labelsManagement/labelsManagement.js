@@ -41,6 +41,7 @@ import LABEL_SelectPrice from "@salesforce/label/c.LABEL_SelectPrice";
 import LABEL_DefaultPrice from "@salesforce/label/c.LABEL_DefaultPrice";
 import LABEL_OrSetPrice from "@salesforce/label/c.LABEL_OrSetPrice";
 import LABEL_SelectedProductsAndPrice from "@salesforce/label/c.LABEL_SelectedProductsAndPrice";
+import LABEL_EmptyPriceBook from "@salesforce/label/c.LABEL_EmptyPriceBook";
 
 import LABEL_ASK_IsActive from "@salesforce/label/c.LABEL_ASK_IsActive";
 import LABEL_ASK_Deactivate from "@salesforce/label/c.LABEL_ASK_Deactivate";
@@ -126,6 +127,7 @@ export {
   LABEL_DefaultPrice,
   LABEL_OrSetPrice,
   LABEL_SelectedProductsAndPrice,
+  LABEL_EmptyPriceBook,
   LABEL_ASK_IsActive,
   LABEL_ASK_Deactivate,
   LABEL_INFO_ProductNoImg,

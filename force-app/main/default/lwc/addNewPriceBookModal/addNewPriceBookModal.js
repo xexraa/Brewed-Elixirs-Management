@@ -15,7 +15,6 @@ export default class AddNewPriceBookModal extends LightningElement {
   name;
   startDate;
   endDate;
-  description;
 
   handleSave() {
     this.isLoading = true;
@@ -25,7 +24,7 @@ export default class AddNewPriceBookModal extends LightningElement {
       priceBookData.Name = this.name;
       priceBookData.Start_Date__c = this.startDate;
       priceBookData.End_Date__c = this.endDate;
-      priceBookData.Description = this.description;
+      priceBookData.IsActive = true;
 
       insertPriceBook({ priceBookData: priceBookData })
         .then(() => {

@@ -1,2 +1,3 @@
 // System.debug([SELECT Id, Name, Mark__c, Subtype__c, Taste__c, Type__c, Weight__c FROM Product2 WHERE IsActive = true AND Type__c = 'Coffee' AND Type__c = 'Tea']);
-System.debug([SELECT Id, Body, Name, ContentType FROM StaticResource WHERE Name = 'DefaultImage' LIMIT 1]);
+// System.debug([SELECT Id, IsMainImage__c FROM ContentVersion WHERE IsMainImage__c = true AND LinkedEntityId =  LIMIT 1]);
+System.debug([SELECT Id, IsMainImage__c FROM ContentVersion WHERE IsMainImage__c = true AND ContentDocument.LatestPublishedVersion.LatestPublishedVersionId = '01tQy000005GPmrIAG' LIMIT 1]);

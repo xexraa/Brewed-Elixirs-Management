@@ -1,38 +1,64 @@
 <!-- sldsValidatorIgnore -->
 <template>
-  <lightning-card icon-name="standard:pricebook">
-    <h1 slot="title">{label.CARD_TITLE_BEpricebook}</h1>
-    <lightning-button
-      label={label.BUTTON_NewPriceBook}
-      slot="actions"
-      onclick={openNewPriceBookModal}
-    ></lightning-button>
-    <lightning-layout multiple-rows>
-      <template lwc:if={isLoading}>
-        <lightning-layout-item size="12" class="slds-align_absolute-center">
-          <c-spinner size="medium"></c-spinner>
-        </lightning-layout-item>
-      </template>
-      <template lwc:else>
-        <!-- Datatable -->
-        <lightning-layout-item size="12">
-          <lightning-datatable
-            key-field="id"
-            data={data}
-            columns={columns}
-            column-widths-mode="auto"
-            default-sort-direction={defaultSortDirection}
-            sorted-direction={sortDirection}
-            sorted-by={sortedBy}
-            onsort={onHandleSort}
-            hide-checkbox-column
-            onrowaction={handleRowAction}
-          >
-          </lightning-datatable>
-        </lightning-layout-item>
-      </template>
-    </lightning-layout>
-  </lightning-card>
+  <lightning-layout>
+    <lightning-layout-item size="8" class="slds-var-p-right_small">
+      <lightning-card icon-name="standard:pricebook">
+        <h1 slot="title">{label.CARD_TITLE_BEpricebook}</h1>
+        <lightning-button
+          label={label.BUTTON_NewPriceBook}
+          slot="actions"
+          onclick={openNewPriceBookModal}
+        ></lightning-button>
+        <lightning-layout multiple-rows>
+          <template lwc:if={isLoading}>
+            <lightning-layout-item size="12" class="slds-align_absolute-center">
+              <c-spinner size="medium"></c-spinner>
+            </lightning-layout-item>
+          </template>
+          <template lwc:else>
+            <!-- Datatable -->
+            <lightning-layout-item size="12">
+              <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}
+                column-widths-mode="auto"
+                default-sort-direction={defaultSortDirection}
+                sorted-direction={sortDirection}
+                sorted-by={sortedBy}
+                onsort={onHandleSort}
+                hide-checkbox-column
+                onrowaction={handleRowAction}
+              >
+              </lightning-datatable>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>
+      </lightning-card>
+    </lightning-layout-item>
+    <lightning-layout-item size="4">
+      <lightning-card lwc:if={isSelectedPriceBook}>
+        <lightning-layout>
+          <template lwc:if={isPriceBookEmpty}>
+            <lightning-layout-item size="12">
+              <lightning-datatable
+                key-field="id"
+                data={pricebookData}
+                columns={pricebookColumns}
+                column-widths-mode="auto"
+                hide-checkbox-column
+                show-row-number-column
+              >
+              </lightning-datatable>
+            </lightning-layout-item>
+          </template>
+          <lightning-layout-item size="12" class="slds-align_absolute-center">
+            <p class="slds-text-heading_medium">{label.LABEL_EmptyPriceBook}</p>
+          </lightning-layout-item>
+        </lightning-layout>
+      </lightning-card>
+    </lightning-layout-item>
+  </lightning-layout>
   <c-add-new-price-book-modal
     lwc:if={isNewPriceBookModalVisible}
     onclosemodal={closeModal}

@@ -3,6 +3,7 @@ import { refreshApex } from "@salesforce/apex";
 import { CurrentPageReference } from "lightning/navigation";
 
 import getAllPriceBooks from "@salesforce/apex/PriceManagementTabController.getAllPriceBooks";
+import getPricebookEntriesForPricebook from "@salesforce/apex/PriceManagementTabController.getPricebookEntriesForPricebook";
 
 import { ToastUtility, SortUtility } from "c/utility";
 import * as LABELS from "c/labelsManagement";
@@ -18,8 +19,20 @@ const COLUMNS = [
   {
     label: LABELS.LABEL_Name,
     fieldName: "Name",
-    type: "text",
-    sortable: true
+    type: "button",
+    sortable: true,
+    typeAttributes: {
+      label: { fieldName: "Name" },
+      name: "showDetails",
+      disabled: false,
+      variant: "base"
+    },
+    rowActions: [
+      {
+        label: "View Details",
+        name: "showDetails"
+      }
+    ]
   },
   {
     label: LABELS.LABEL_StartDate,
@@ -57,11 +70,28 @@ const COLUMNS = [
   }
 ];
 
+const PRICEBOOK_COLUMNS = [
+  {
+    label: LABELS.LABEL_Name,
+    fieldName: "Name",
+    type: "text"
+  },
+  {
+    label: LABELS.LABEL_Price,
+    fieldName: "UnitPrice",
+    type: "currency",
+    cellAttributes: { alignment: "left" },
+    initialWidth: 120
+  }
+];
+
 export default class PriceManagementTab extends LightningElement {
   label = LABELS;
   columns = COLUMNS;
+  pricebookColumns = PRICEBOOK_COLUMNS;
 
   isLoading = true;
+  isSelectedPriceBook = false;
   isNewPriceBookModalVisible = false;
   isEditPriceBookModalVisible = false;
   isAddProductsModalVisible = false;
@@ -70,10 +100,12 @@ export default class PriceManagementTab extends LightningElement {
 
   wiredPriceBooksResult;
   data = [];
+  pricebookData = [];
   selectedPriceBook;
   defaultSortDirection = "asc";
   sortDirection;
   sortedBy;
+  selectedPricebookFromButton;
 
   constructor() {
     super();
@@ -84,6 +116,8 @@ export default class PriceManagementTab extends LightningElement {
 
   @wire(CurrentPageReference)
   wiredPageRef() {
+    this.isSelectedPriceBook = false;
+    this.pricebookData = [];
     this.refreshCmp();
   }
 
@@ -124,6 +158,10 @@ export default class PriceManagementTab extends LightningElement {
     const row = event.detail.row;
 
     switch (actionName) {
+      case "showDetails":
+        this.selectedPricebookFromButton = row;
+        this.fetchGetPriceBookById(row);
+        break;
       case "edit":
         this.editSelectedPriceBook(row);
         break;
@@ -142,6 +180,26 @@ export default class PriceManagementTab extends LightningElement {
 
       default:
     }
+  }
+
+  fetchGetPriceBookById(pricebook) {
+    this.isLoading = true;
+
+    getPricebookEntriesForPricebook({ pricebookId: pricebook.Id })
+      .then((result) => {
+        this.isSelectedPriceBook = true;
+
+        this.pricebookData = result;
+      })
+      .catch((error) => {
+        ToastUtility.displayToast(
+          error.body.message || this.label.TOAST_Error,
+          "error"
+        );
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   openNewPriceBookModal() {
@@ -170,6 +228,7 @@ export default class PriceManagementTab extends LightningElement {
 
   closeModal() {
     this.refreshCmp();
+    this.refreshSelectedPricebookEntries();
     this.isEditPriceBookModalVisible = false;
     this.isNewPriceBookModalVisible = false;
     this.isAddProductsModalVisible = false;
@@ -189,6 +248,14 @@ export default class PriceManagementTab extends LightningElement {
     this.sortedBy = sortedBy;
   }
 
+  refreshSelectedPricebookEntries() {
+    if (this.selectedPricebookFromButton) {
+      if (this.selectedPriceBook.Id === this.selectedPricebookFromButton.Id) {
+        this.fetchGetPriceBookById(this.selectedPricebookFromButton);
+      }
+    }
+  }
+
   refreshCmp() {
     this.isLoading = true;
 
@@ -202,5 +269,9 @@ export default class PriceManagementTab extends LightningElement {
       .finally(() => {
         this.isLoading = false;
       });
+  }
+
+  get isPriceBookEmpty() {
+    return this.pricebookData.length === 0 ? false : true;
   }
 }
